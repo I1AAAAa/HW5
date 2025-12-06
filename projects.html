@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Explore cognitive functions and personality types through interactive project cards.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="view-transition" content="same-origin">
+  <title>Cognitive Functions & Projects | Jungian Cognitive Type Test</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Project Cards Container - CSS Grid Layout */
+    .projects-container {
+      display: grid;
+      grid-template-columns: 1fr; /* Mobile: 1 column */
+      gap: var(--spacing-lg, 2rem); /* Spacing between cards */
+      margin: var(--spacing-lg, 2rem) 0;
+      padding: 0 var(--spacing-md, 1.5rem);
+    }
+
+    /* Responsive adjustments */
+    /* Tablet: 2 columns */
+    @media screen and (min-width: 768px) {
+      .projects-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg, 2rem);
+      }
+    }
+
+    /* Desktop: 4 columns */
+    @media screen and (min-width: 1200px) {
+      .projects-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--spacing-md, 1.5rem); /* Slightly smaller gap for 4 columns */
+      }
+    }
+
+    /* Large Desktop: Keep 4 columns with more spacing */
+    @media screen and (min-width: 1600px) {
+      .projects-container {
+        gap: var(--spacing-lg, 2rem);
+      }
+    }
+
+    /* Button styles for Load Local/Remote */
+    .load-buttons {
+      display: flex;
+      gap: var(--spacing-md, 1.5rem);
+      justify-content: center;
+      margin: var(--spacing-lg, 2rem) 0;
+      flex-wrap: wrap;
+    }
+
+    .load-buttons button {
+      padding: var(--spacing-sm, 1rem) var(--spacing-lg, 2rem);
+      font-size: 1rem;
+      min-width: 150px;
+    }
+
+    .load-buttons button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Empty state message */
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-xl, 3rem);
+      color: var(--color-text-light, #6b7280);
+    }
+
+    .empty-state p {
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-md, 1.5rem);
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle Button -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+    🌙
+  </button>
+  <noscript>
+    <style>
+      .theme-toggle { display: none !important; }
+    </style>
+  </noscript>
+
+  <header>
+    <h1>Jungian Cognitive Type Test</h1>
+    <nav>
+      <div id="theme-picker">
+        <label>Choose Theme:</label>
+        <select id="theme-select">
+          <option value="light">🌕 Light</option>
+          <option value="dark">🌑 Dark</option>
+          <option value="sunset">🌅 Sunset</option>
+          <option value="forest">🌲 Forest</option>
+        </select>
+      </div>
+      
+      <input type="checkbox" id="nav-toggle" aria-label="Toggle navigation menu">
+      <label for="nav-toggle" class="hamburger-icon" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="standard-test.html">Standard Test</a></li>
+        <li><a href="professional-test.html">Professional Test</a></li>
+        <li><a href="types.html">Type Descriptions</a></li>
+        <li><a href="projects.html" class="active">Projects</a></li>
+        <li><a href="crud.html">Manage Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="form-no-js.html">Form (No JS)</a></li>
+        <li><a href="form-with-js.html">Form (With JS)</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="projects-section">
+      <h2>Cognitive Functions & Learning Resources</h2>
+      <p>
+        Explore the eight cognitive functions and related learning resources through interactive project cards.
+        Each card provides detailed information about different aspects of Jungian cognitive theory.
+      </p>
+
+      <!-- Load Buttons for Part 2 -->
+      <div class="load-buttons">
+        <button id="load-local-btn" type="button">Load Local</button>
+        <button id="load-remote-btn" type="button">Load Remote</button>
+      </div>
+
+      <!-- Project Cards Container -->
+      <div class="projects-container" id="projects-container">
+        <div class="empty-state">
+          <p>No cards loaded yet. Click "Load Local" or "Load Remote" above.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><em>© 2025 Jungian Cognitive Test Project</em></p>
+  </footer>
+
+  <!-- Load custom element script -->
+  <script src="project-card.js" defer></script>
+  <!-- Load data management script (for Part 2) -->
+  <script src="projects-data.js" defer></script>
+  <script src="view-transitions.js" defer></script>
+  <script src="theme-toggle.js" defer></script>
+  <script src="theme-picker.js" defer></script>
+</body>
+</html>
+
