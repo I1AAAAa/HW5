@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="view-transition" content="same-origin">
+  <title>Test Results | Jungian Cognitive Type Test</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: var(--color-bg);
+      font-family: 'BodyFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                   'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      color: var(--color-text);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header and nav styles are now in style.css for consistency across all pages */
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    main > article.result-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      padding: 2.5rem 3rem;
+      max-width: 600px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin: 0 auto;
+    }
+
+    main > article.result-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      font-family: 'DisplayFont', Georgia, 'Times New Roman', serif;
+      color: var(--color-primary);
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      font-size: 1.15rem;
+      color: var(--color-text-light);
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .button {
+      display: inline-block;
+      padding: var(--spacing-sm) var(--spacing-lg);
+      margin: 10px;
+      border-radius: var(--border-radius);
+      text-decoration: none;
+      color: #fff;
+      background-color: var(--color-primary);
+      font-weight: 500;
+      transition: background-color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .button:hover {
+      background-color: var(--color-primary-dark);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      text-align: center;
+      background-color: var(--color-bg-secondary);
+      color: var(--color-text);
+      padding: var(--spacing-md) var(--spacing-lg);
+      font-size: var(--font-size-sm);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Theme Toggle Button -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+    🌙
+  </button>
+  <noscript>
+    <style>
+      .theme-toggle { display: none !important; }
+    </style>
+  </noscript>
+
+  <header>
+    <h1>Jungian Cognitive Type Test</h1>
+    <nav>
+      <div id="theme-picker">
+        <label>Choose Theme:</label>
+        <select id="theme-select">
+          <option value="light">🌕 Light</option>
+          <option value="dark">🌑 Dark</option>
+          <option value="sunset">🌅 Sunset</option>
+          <option value="forest">🌲 Forest</option>
+        </select>
+      </div>
+      
+      
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="standard-test.html">Standard Test</a></li>
+        <li><a href="professional-test.html">Professional Test</a></li>
+        <li><a href="types.html">Type Descriptions</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="form-no-js.html">Form (No JS)</a></li>
+        <li><a href="form-with-js.html">Form (With JS)</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="result-card">
+      <h2>🎉 Thank You for Completing the Test!</h2>
+      <p>Your responses have been submitted successfully.</p>
+      <p>
+        This demo version doesn't calculate scores, but in a full implementation it would analyze your answers and
+        provide an overview of your likely Jungian cognitive type.
+      </p>
+      <a href="index.html" class="button">Return to Home</a>
+      <a href="standard-test.html" class="button">Retake the Test</a>
+    </article>
+  </main>
+
+  <footer>
+    <p><em>© 2025 Jungian Cognitive Test Project</em></p>
+  </footer>
+
+  <script src="view-transitions.js" defer></script>
+  <script src="theme-toggle.js" defer></script>
+  <script src="theme-picker.js" defer></script>
+
+</body>
+</html>

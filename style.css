@@ -1,0 +1,1532 @@
+/* ============================================
+   Jungian Cognitive Type Test - CSS Stylesheet
+   HW3 - Standards-Based CSS with Modern Features
+   ============================================ */
+
+/* ============================================
+   CSS Variables (with fallbacks)
+   ============================================ */
+/* ---------- BASE THEME VARIABLES ---------- */
+/* Default (Light) */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #111111;
+  --accent-color: #004080;
+}
+
+/* Dark theme */
+:root[data-theme="dark"] {
+  --bg-color: #121212;
+  --text-color: #f5f5f5;
+  --accent-color: #90caf9;
+}
+
+/* Sunset theme */
+:root[data-theme="sunset"] {
+  --bg-color: #ffe5d9;
+  --text-color: #663c3c;
+  --accent-color: #ff784f;
+}
+
+/* Forest theme */
+:root[data-theme="forest"] {
+  --bg-color: #e8f5e9;
+  --text-color: #1b5e20;
+  --accent-color: #4caf50;
+}
+
+/* Apply colors globally */
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+a, button, .btn-primary {
+  background-color: var(--accent-color);
+}
+:root {
+  /* Color variables with fallbacks - Deep Blue Only */
+  --color-primary: #004080; /* Deep blue */
+  --color-primary-dark: #002d5c; /* Darker blue for hover/dark states */
+  --color-secondary: #004080; /* Same deep blue for consistency */
+  --color-accent: #004080; /* Same deep blue */
+  --color-text: #1f2937;
+  --color-text-light: #6b7280;
+  --color-bg: #ffffff;
+  --color-bg-secondary: #f9fafb;
+  --color-bg-accent: #e5e7eb;
+  --color-border: #e5e7eb;
+  
+  /* Theme toggle button colors */
+  --theme-toggle-bg: #ffffff;
+  --theme-toggle-text: #004080;
+  --theme-toggle-border: #004080;
+  
+  /* Typography variables */
+  --font-size-base: 1rem;
+  --font-size-sm: 0.875rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --line-height-base: 1.6;
+  --line-height-tight: 1.4;
+  
+  /* Spacing variables using rem */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  /* Border and shadow */
+  --border-radius: 0.5rem;
+  --border-width: 1px;
+  --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 6px 12px -2px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 12px 20px -4px rgba(0, 0, 0, 0.3);
+  
+  /* Animation variables */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 300ms ease-in-out;
+  --transition-slow: 500ms ease-in-out;
+}
+
+/* Dark mode theme */
+[data-theme="dark"] {
+  --color-primary: #5a9fd4; /* Lighter blue for dark mode */
+  --color-primary-dark: #4a8fc4;
+  --color-secondary: #5a9fd4;
+  --color-accent: #5a9fd4;
+  --color-text: #e5e7eb;
+  --color-text-light: #9ca3af;
+  --color-bg: #1f2937;
+  --color-bg-secondary: #111827;
+  --color-bg-accent: #374151;
+  --color-border: #4b5563;
+  --theme-toggle-bg: #374151;
+  --theme-toggle-text: #e5e7eb;
+  --theme-toggle-border: #5a9fd4;
+}
+
+/* ============================================
+   Custom Fonts (with system font fallbacks)
+   ============================================ */
+@font-face {
+  font-family: 'DisplayFont';
+  src: url('fonts/display-font.woff2') format('woff2'),
+       url('fonts/display-font.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap; /* Prevents CLS */
+}
+
+@font-face {
+  font-family: 'BodyFont';
+  src: url('fonts/body-font.woff2') format('woff2'),
+       url('fonts/body-font.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px; /* Base for rem calculations */
+}
+
+/* ============================================
+   Layout - CSS Grid for Main Structure
+   ============================================ */
+body {
+  font-family: 'BodyFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+               'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-size: var(--font-size-base, 1rem); /* Fallback to 1rem */
+  line-height: var(--line-height-base, 1.6); /* Fallback to 1.6 */
+  color: var(--color-text, #1f2937); /* Fallback color */
+  background-color: var(--color-bg, #ffffff); /* Fallback to white */
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+  min-height: 100dvh; /* Dynamic viewport height */
+}
+
+/* Accessibility: Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+header {
+  grid-area: header;
+  background: var(--color-primary, #004080); /* Solid deep blue, no gradient - fallback color */
+  color: #ffffff;
+  padding: 0.5rem 0 0.8rem 0; /* Reduced top padding, minimal spacing */
+  text-align: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-md);
+  /* Ensure hamburger menu stays within header bounds */
+  overflow: visible; /* Allow hamburger icon to be visible */
+}
+
+/* Hide any decorative elements between h1 and nav */
+header > *:not(h1):not(nav) {
+  display: none;
+}
+
+header h1::after,
+header h1::before,
+header nav::before {
+  display: none;
+  content: none;
+}
+
+main {
+  grid-area: main;
+  max-width: 1400px; /* Increased from 1200px for wider desktop layout */
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+footer {
+  grid-area: footer;
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-md) var(--spacing-lg);
+  text-align: center;
+  margin-top: auto;
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+h1 {
+  font-family: 'DisplayFont', Georgia, 'Times New Roman', serif; /* Serif fallback */
+  font-size: 2.2rem; /* Larger font size */
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+  margin: 0 0 0.5rem 0; /* Remove top margin, reduce bottom margin */
+  color: #ffffff;
+}
+
+h2 {
+  font-family: 'DisplayFont', Georgia, 'Times New Roman', serif;
+  font-size: 1.6rem; /* Match welcome and about sections */
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+  margin: 0 0 1.5rem 0; /* No top margin (padding handles it), 1.5rem bottom */
+  color: var(--color-text);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+  color: var(--color-text);
+}
+
+p {
+  margin: 0 auto 1.5rem auto; /* Center with auto left/right, 1.5rem bottom to match spacing */
+  font-size: 1.15rem; /* Match welcome and about sections */
+  line-height: 1.5; /* Tighter line height */
+  max-width: 85ch; /* Match welcome and about sections */
+}
+
+/* ============================================
+   Navigation - Flexbox Layout
+   ============================================ */
+/* Hamburger icon - hidden on desktop by default */
+.hamburger-icon {
+  display: none;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0; /* Reduced top margin */
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem; /* Match index.html format */
+}
+
+nav li {
+  flex: 0 1 auto;
+}
+
+nav a {
+  text-decoration: none;
+  color: #ffffff; /* White text */
+  font-weight: 500;
+  font-size: 1.1rem; /* Larger font size for navigation */
+  transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+  padding: 0.5rem 1rem; /* Add padding for hover effect */
+  border-radius: var(--border-radius);
+}
+
+nav a:hover,
+nav a:focus {
+  background-color: rgba(0, 0, 0, 0.2); /* Dark background on hover - match index.html */
+  outline: none; /* Remove default focus outline */
+}
+
+nav a:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Theme Toggle Button
+   ============================================ */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  background-color: var(--theme-toggle-bg);
+  color: var(--theme-toggle-text);
+  border: 2px solid var(--theme-toggle-border);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+.theme-toggle:focus {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Hide theme toggle when JavaScript is disabled */
+.no-js .theme-toggle {
+  display: none;
+}
+
+/* ============================================
+   View Transition API Styles
+   ============================================ */
+@view-transition {
+  navigation: auto;
+}
+
+/* Smooth transition for page elements */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
+}
+
+/* Fade transition */
+::view-transition-old(root) {
+  animation-name: fade-out;
+}
+
+::view-transition-new(root) {
+  animation-name: fade-in;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ============================================
+   Sections - Flexbox/Grid Layout
+   ============================================ */
+section {
+  margin: var(--spacing-xl) 0;
+  padding: 1.5rem var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+  background-color: var(--color-bg); /* Use CSS variable for theme support */
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Grid layout for sections containing multiple articles */
+section:has(article) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: var(--spacing-md);
+}
+
+/* Card container styling */
+section .card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: var(--spacing-lg);
+  margin-top: 0; /* No top margin - p's margin-bottom handles spacing */
+  justify-items: center;
+}
+
+section .card-container article {
+  width: 100%;
+  max-width: 100%; /* No width restriction - match body content width */
+  padding: var(--spacing-lg);
+  text-align: left;
+}
+
+/* Ensure paragraphs inside articles align left with headings */
+section .card-container article p,
+article p {
+  margin: 0 0 1.5rem 0; /* Left align: no auto margins, only bottom margin */
+  max-width: 100%; /* Full width within article */
+}
+
+/* Mobile First - Phone breakpoint (<600px) */
+/* Default styles above apply for phones */
+
+/* Tablet and larger mobile (600px+) */
+@media screen and (min-width: 600px) {
+  section:has(article),
+  section .card-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+    justify-items: center;
+  }
+  
+  section .card-container article {
+    max-width: 100%; /* No width restriction - cards fill available space */
+  }
+}
+
+/* Fallback for browsers without :has() support */
+@supports not selector(:has(*)) {
+  section > article {
+    display: inline-block;
+    width: calc(50% - var(--spacing-md) / 2);
+    vertical-align: top;
+  }
+  
+  section > article:first-child {
+    margin-right: var(--spacing-md);
+  }
+}
+
+article {
+  padding: var(--spacing-md);
+  background-color: var(--color-bg);
+  border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--color-border);
+  transition: transform var(--transition-normal),
+              box-shadow var(--transition-normal);
+}
+
+article:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   Images - Picture and srcset Support
+   ============================================ */
+picture {
+  display: block;
+  width: 100%;
+  margin: var(--spacing-md) 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  
+  /* Object-fit for responsive images */
+  object-fit: cover;
+  object-position: center;
+}
+
+section picture {
+  margin: var(--spacing-md) auto;
+  max-width: 800px;
+}
+
+/* ============================================
+   Buttons - Transform and Transition
+   ============================================ */
+button {
+  font-size: var(--font-size-base, 1rem); /* Fallback to 1rem */
+  padding: var(--spacing-sm, 1rem) var(--spacing-lg, 2rem); /* Fallback spacing */
+  background-color: var(--color-primary, #004080); /* Fallback color */
+  color: #ffffff;
+  border: none;
+  border-radius: var(--border-radius, 0.5rem); /* Fallback to 0.5rem */
+  cursor: pointer;
+  transition: background-color var(--transition-fast),
+              transform var(--transition-fast),
+              box-shadow var(--transition-fast);
+  font-weight: 500;
+}
+
+button:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+button:focus {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Forms
+   ============================================ */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+fieldset {
+  padding: var(--spacing-md);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-bg);
+}
+
+label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  max-width: 500px;
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-base);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 64, 128, 0.1); /* Deep blue shadow */
+}
+
+/* ============================================
+   Progress Bar
+   ============================================ */
+progress {
+  width: 100%;
+  max-width: 400px;
+  height: 1.5rem;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+progress::-webkit-progress-bar {
+  background-color: var(--color-bg-accent);
+}
+
+progress::-webkit-progress-value {
+  background-color: var(--color-primary);
+  transition: width var(--transition-slow);
+}
+
+/* ============================================
+   Custom Elements
+   ============================================ */
+semantic-box {
+  display: block;
+  padding: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+  background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-bg));
+  border-left: 4px solid var(--color-secondary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================
+   Animation Example
+   ============================================ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+article {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+section {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* ============================================
+   Baseline 2024/2025 Feature: CSS Nesting & Container Queries
+   ============================================ */
+
+/* Baseline 2025 Feature: Container Queries */
+/* Container queries allow styles to respond to the size of a containing element
+   rather than just the viewport, enabling more component-based responsive design.
+   This is particularly useful for reusable components that need to adapt to
+   their container's dimensions independently of the page layout. */
+.card-container {
+  container-type: inline-size;
+  container-name: card-container;
+}
+
+/* Container query: Adjust article layout when container is wide enough */
+@container card-container (min-width: 600px) {
+  .card-container article {
+    max-width: 400px;
+  }
+}
+
+/* Fallback for browsers without container query support */
+/* Media queries in @media rules below serve as fallback */
+
+/* CSS Nesting is now widely supported (Baseline 2024) */
+/* Using @supports for graceful degradation */
+@supports (selector(&)) {
+  /* Nested styles for better organization */
+  header {
+    h1 {
+      text-align: center;
+    }
+    
+    nav {
+      margin-top: var(--spacing-sm);
+    }
+  }
+  
+  main {
+    section {
+      h2 {
+        color: var(--color-primary);
+      }
+      
+      p {
+        color: var(--color-text-light);
+        font-size: 1.15rem; /* Match welcome section */
+      }
+    }
+  }
+  
+  footer {
+    p {
+      margin: var(--spacing-xs) 0;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+    }
+  }
+}
+
+/* Fallback for browsers without nesting support */
+@supports not (selector(&)) {
+  header h1 {
+    text-align: center;
+  }
+  
+  header nav {
+    margin-top: var(--spacing-sm);
+  }
+  
+  main section h2 {
+    color: var(--color-primary);
+  }
+  
+  main section p {
+    color: var(--color-text-light);
+    font-size: 1.15rem; /* Match welcome section */
+  }
+  
+  footer p {
+    margin: var(--spacing-xs) 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+  }
+}
+
+/* ============================================
+   Responsive Design - Media Queries
+   ============================================ */
+
+/* Mobile First Approach */
+
+/* Small screens (phones) - default styles above apply */
+/* Mobile-specific adjustments for touch and compact layout */
+/* Responsive Design - Mobile (phones < 600px) */
+@media screen and (max-width: 599px) {
+  /* Hamburger menu for mobile - Checkbox hack (pure CSS) */
+  /* Ensure consistent positioning across all pages */
+  header {
+    position: relative; /* Make header the positioning context for hamburger menu */
+    min-height: auto; /* Allow natural height */
+  }
+  
+  nav {
+    position: relative;
+  }
+  
+  /* Hide checkbox */
+  #nav-toggle {
+    display: none;
+  }
+  
+  /* Hamburger icon (three lines) - vertically center with h1 title */
+  /* Consistent positioning across all pages (home, contact, test pages, etc.) */
+  /* Ensure hamburger icon is fully contained within header/nav bar */
+  .hamburger-icon {
+    display: block;
+    position: absolute;
+    top: 50%; /* Center vertically in header - consistent across all pages */
+    right: 1rem;
+    transform: translateY(-50%); /* Center the icon itself */
+    width: 30px;
+    height: 24px;
+    cursor: pointer;
+    z-index: 1001;
+    /* Ensure it stays within header bounds */
+    margin: 0;
+    padding: 0;
+  }
+  
+  .hamburger-icon span {
+    display: block;
+    position: absolute;
+    height: 3px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 2px;
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: all 0.25s ease-in-out;
+  }
+  
+  .hamburger-icon span:nth-child(1) {
+    top: 0px;
+  }
+  
+  .hamburger-icon span:nth-child(2) {
+    top: 10px;
+  }
+  
+  .hamburger-icon span:nth-child(3) {
+    top: 20px;
+  }
+  
+  /* Transform hamburger icon when menu is open - maintain vertical centering */
+  #nav-toggle:checked ~ .hamburger-icon {
+    transform: translateY(-50%); /* Keep vertical centering */
+  }
+  
+  #nav-toggle:checked ~ .hamburger-icon span:nth-child(1) {
+    top: 10px;
+    transform: rotate(135deg);
+  }
+  
+  #nav-toggle:checked ~ .hamburger-icon span:nth-child(2) {
+    opacity: 0;
+    left: -60px;
+  }
+  
+  #nav-toggle:checked ~ .hamburger-icon span:nth-child(3) {
+    top: 10px;
+    transform: rotate(-135deg);
+  }
+  
+  nav ul {
+    display: none; /* Hide by default on mobile */
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--color-primary, #004080);
+    padding: var(--spacing-sm, 1rem) 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin: 0;
+  }
+  
+  /* Show menu when checkbox is checked */
+  #nav-toggle:checked ~ ul {
+    display: flex;
+  }
+  
+  nav li {
+    width: 100%;
+    text-align: center;
+  }
+  
+  nav a {
+    display: block;
+    padding: var(--spacing-sm, 1rem);
+    width: 100%;
+    font-size: 1rem; /* Slightly smaller for mobile */
+  }
+  
+  /* Touch-optimized buttons */
+  button {
+    min-height: 44px; /* Minimum touch target size */
+    min-width: 44px;
+    padding: var(--spacing-sm, 1rem) var(--spacing-md, 1.5rem);
+  }
+  
+  /* Compact spacing for mobile */
+  main {
+    padding: var(--spacing-sm, 1rem) var(--spacing-xs, 0.5rem); /* Further reduced padding for mobile */
+  }
+  
+  section {
+    padding: var(--spacing-sm, 1rem) var(--spacing-xs, 0.5rem); /* Reduced padding for mobile */
+    margin: var(--spacing-sm, 1rem) 0; /* Reduced margin */
+  }
+  
+  h1 {
+    font-size: 1.75rem; /* Smaller for mobile */
+  }
+  
+  h2 {
+    font-size: 1.4rem; /* Smaller for mobile */
+  }
+  
+  /* Test pages responsive adjustments for mobile */
+  /* Make form responsive on mobile */
+  form {
+    width: 100%;
+    padding: 0 0.5rem;
+    max-width: 100%;
+  }
+  
+  /* Reduce padding on question blocks for mobile */
+  form li {
+    padding: 1.5rem 1rem;
+    margin: 1.5rem auto;
+    max-width: 100%;
+  }
+  
+  /* Make options wrap on mobile */
+  .options {
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: flex-start;
+  }
+  
+  /* Reduce font size for options on mobile */
+  .options label {
+    font-size: 0.85rem;
+    white-space: normal;
+  }
+  
+  /* Make overview and test sections responsive */
+  #overview,
+  #test {
+    padding: 1rem 0.5rem;
+    margin: 1rem 0;
+  }
+  
+  /* Available Tests section - stack cards vertically on mobile */
+  main section:nth-of-type(3) {
+    padding: 0.5rem 0.25rem !important; /* Minimal padding for mobile */
+    margin: 0.75rem 0 !important; /* Reduced margin */
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+  
+  main section:nth-of-type(3) h2 {
+    font-size: 1.1rem !important; /* Smaller title on mobile */
+    margin: 0 0 0.5rem 0 !important; /* Minimal bottom margin */
+    padding: 0 !important;
+  }
+  
+  main section:nth-of-type(3) > p {
+    font-size: 0.85rem !important; /* Smaller text on mobile */
+    margin: 0 0 0.5rem 0 !important; /* Reduced margins */
+    padding: 0 0.25rem !important;
+    line-height: 1.3;
+    max-width: 100% !important;
+  }
+  
+  main section:nth-of-type(3) .card-container {
+    grid-template-columns: 1fr !important; /* Single column on mobile */
+    gap: 0.75rem !important; /* Minimal gap for mobile */
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+  }
+  
+  main section:nth-of-type(3) .card-container article {
+    padding: 0.75rem 0.5rem !important; /* Compact padding for mobile */
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+  }
+  
+  main section:nth-of-type(3) .card-container article h3 {
+    font-size: 0.85rem !important; /* Smaller title on mobile */
+    margin: 0 0 0.3rem 0 !important;
+    padding: 0 !important;
+  }
+  
+  main section:nth-of-type(3) .card-container article p {
+    font-size: 0.75rem !important; /* Smaller text on mobile */
+    line-height: 1.25;
+    margin: 0 0 0.4rem 0 !important; /* Minimal margins */
+    padding: 0 !important;
+  }
+  
+  main section:nth-of-type(3) .card-container article button {
+    font-size: 0.75rem !important; /* Smaller button text on mobile */
+    padding: 0.4rem 0.6rem !important;
+    width: 100% !important; /* Full width button on mobile */
+    margin: 0.4rem 0 0 0 !important;
+    box-sizing: border-box;
+  }
+}
+
+/* Tablet (600px - 767px) */
+@media screen and (min-width: 600px) and (max-width: 767px) {
+  /* Tablet-specific adjustments */
+  nav ul {
+    display: flex; /* Show menu normally on tablet */
+    flex-wrap: wrap;
+    gap: var(--spacing-md, 1.5rem);
+  }
+  
+  /* Hide hamburger icon on tablet and larger */
+  .hamburger-icon {
+    display: none;
+  }
+  
+  /* Test pages responsive adjustments for tablet */
+  form {
+    width: 98%;
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+  
+  form li {
+    padding: 1.5rem 2rem;
+    max-width: 100%;
+  }
+  
+  /* Make options wrap if needed on tablet */
+  .options {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  
+  .options label {
+    font-size: 0.95rem;
+  }
+}
+
+/* Tablet (768px - 1023px) */
+@media screen and (min-width: 768px) {
+  main {
+    padding: var(--spacing-xl);
+  }
+  
+  h1 {
+    font-size: clamp(1.75rem, 4dvw, var(--font-size-3xl)); /* Dynamic viewport width */
+  }
+  
+  section:has(article),
+  section .card-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop (1024px and above) */
+@media screen and (min-width: 1024px) {
+  main {
+    padding: var(--spacing-xl) var(--spacing-xl);
+    max-width: 1400px; /* Increased from 1200px for wider desktop layout */
+  }
+  
+  header {
+    text-align: center;
+  }
+  
+  section:has(article),
+  section .card-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xl);
+    width: 100%;
+    max-width: 100%; /* Match body content width - no artificial limit */
+    margin: 0 auto;
+  }
+  
+  section .card-container article {
+    max-width: 100%; /* Full width - cards fill available space */
+  }
+  
+  section {
+    padding: var(--spacing-xl);
+  }
+  
+  article {
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Large desktop (1440px and above) */
+@media screen and (min-width: 1440px) {
+  main {
+    max-width: 1600px; /* Even wider for large desktop screens */
+  }
+  
+  h1 {
+    font-size: clamp(var(--font-size-3xl), 3dvw, 2.5rem);
+  }
+}
+
+/* ============================================
+   Accessibility Enhancements
+   ============================================ */
+
+/* Focus styles for keyboard navigation */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+/* Color contrast - ensuring WCAG AA compliance */
+/* Primary color #004080 (deep blue) on white: 12.63:1 (passes AAA) */
+/* Text color #1f2937 on white: 12.63:1 (passes AAA) */
+
+/* Reduced motion support (already included in body) */
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+  header,
+  footer,
+  nav {
+    display: none;
+  }
+  
+  main {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  * {
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  
+  section,
+  article {
+    page-break-inside: avoid;
+  }
+}
+/* Available Tests section - centered layout */
+main section:nth-of-type(3) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+main section:nth-of-type(3) h2 {
+  margin: 0 0 1.5rem 0; /* No top margin (padding handles it), 1.5rem bottom */
+}
+
+/* Available Tests section paragraph styling */
+main section:nth-of-type(3) > p {
+  margin: 0.5rem auto 1.5rem auto; /* Top 0.5rem, bottom 1.5rem */
+  font-size: 1.15rem;
+  max-width: 85ch;
+  line-height: 1.5;
+  color: var(--color-text-light);
+}
+
+main > section:nth-of-type(3) > p {
+  margin-top: 0.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+main section:nth-of-type(3) .card-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Each card takes equal space */
+  gap: var(--spacing-xl); /* Increased gap */
+  justify-items: stretch; /* Cards fill their grid cells */
+  margin-top: 0; /* No top margin - p's margin-bottom handles spacing */
+  width: 100%;
+  max-width: 100%; /* Match body content width - no artificial limit */
+}
+
+main section:nth-of-type(3) .card-container article {
+  width: 100%; /* Full width of grid cell */
+  max-width: 100%; /* No width restriction - cards fill available space */
+}
+
+main section:nth-of-type(3) .card-container article h3 {
+  font-size: 1.1rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+main section:nth-of-type(3) .card-container article p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 1rem 0; /* Left align: match heading alignment */
+  max-width: 100%; /* Full width within article */
+}
+/* --- Welcome Section (compact layout) --- */
+#welcome {
+  text-align: center;
+  background-color: var(--color-bg); /* Use CSS variable for theme support */
+  padding: 1.5rem var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  margin: 1.5rem 0 var(--spacing-xl) 0;
+  max-width: none;
+}
+
+#welcome h2 {
+  color: var(--color-primary);
+  font-size: 1.6rem;
+  margin: 0 0 1.5rem 0; /* No top margin (padding handles it), 1.5rem bottom */
+}
+
+#welcome p {
+  color: var(--color-text-light); /* Match other sections - gray color */
+  font-size: 1.15rem;
+  max-width: 85ch;
+  margin: 0 auto 1.5rem auto; /* Match other sections - 1.5rem bottom */
+  line-height: 1.5;
+}
+
+#welcome figure {
+  margin: 0.6rem auto 0.4rem auto; /* Tighter spacing between image and text */
+  max-width: 500px;
+}
+
+#welcome img {
+  width: 100%;
+  border-radius: 0.4rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  display: block;
+  margin: 0 auto;
+}
+
+#welcome figcaption {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.3rem; /* Tighter spacing below image caption */
+}
+/* --- About Section Styling --- */
+#about {
+  text-align: center;
+  background-color: var(--color-bg); /* Use CSS variable for theme support */
+  padding: 1.5rem var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  margin: var(--spacing-xl) 0;
+  max-width: none;
+}
+
+#about h2 {
+  color: var(--color-primary);
+  font-size: 1.6rem;
+  margin: 0 0 1.5rem 0; /* No top margin (padding handles it), 1.5rem bottom */
+}
+
+#about p {
+  color: var(--color-text-light); /* Match other sections - gray color */
+  font-size: 1.15rem;
+  max-width: 85ch;
+  margin: 0 auto 1.5rem auto; /* Match other sections - 1.5rem bottom */
+  line-height: 1.5;
+}
+
+#about figure {
+  margin: 1rem auto 0.3rem auto;
+  max-width: 600px;
+}
+
+#about img {
+  width: 100%;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#about figcaption {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.3rem;
+}
+
+/* Main form container */
+form {
+  width: 95%;
+  max-width: 1600px;
+  margin: 0 auto;
+  text-align: center;              /* Center all content */
+}
+
+/* Each question block */
+form li {
+  display: block;
+  margin: 2rem auto;               /* Center and control vertical spacing */
+  padding: 2rem 3rem;              /* More comfortable padding */
+  border: 1px solid #999;
+  border-radius: 0.8rem;
+  background-color: #f2f2f2;       /* Default gray background */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 1500px;               /* Almost fill the page content area */
+  box-sizing: border-box;
+  line-height: 1.7;
+  text-align: center;              /* Center question text and number */
+  transition: background-color 0.25s ease-in-out, transform 0.15s ease-in-out;
+}
+
+/* Hover effect: entire question highlight */
+form li:hover {
+  background-color: #e9e9e9;       /* Light gray highlight on hover */
+  transform: translateY(-2px);
+}
+
+/* Question text (number + statement) */
+form li p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Option row */
+.options {
+  display: flex;
+  justify-content: center;         /* Center options horizontally */
+  align-items: center;
+  gap: 2.5rem;                     /* Spacing between five options */
+  flex-wrap: nowrap;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* Responsive design for test pages - ensure forms adapt to screen size */
+/* These styles are added within existing media queries to avoid conflicts */
+
+/* Option labels */
+.options label {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Radio button spacing */
+.options input[type="radio"] {
+  margin-right: 0.4rem;
+}
+
+
+/* Submit button */
+form button[type="submit"] {
+  margin-top: 2rem;
+  background-color: #004080;
+  color: #fff;
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.7rem 1.4rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.15s ease-in-out;
+}
+
+form button[type="submit"]:hover {
+  background-color: #002d5c;
+  transform: translateY(-2px);
+}
+
+/* Results Page Styling */
+.results-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.results-card {
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  padding: 3rem 4rem;
+  max-width: 800px;
+  width: 90%;
+}
+
+.results-card h2 {
+  font-size: 2rem;
+  color: #002c77;
+  margin-bottom: 1rem;
+}
+
+.results-card p {
+  font-size: 1.15rem;
+  color: #333;
+  margin-bottom: 2.5rem;
+  line-height: 1.7;
+}
+
+.results-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.btn {
+  background-color: #003c99;
+  color: white;
+  padding: 0.9rem 1.8rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.25s ease;
+}
+
+.btn:hover {
+  background-color: #1b57d0;
+}
+
+.btn-secondary {
+  background-color: #999;
+}
+
+.btn-secondary:hover {
+  background-color: #777;
+}
+
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+#nav-toggle {
+  display: none;
+}
+
+/* ============================================
+   Extra Responsive Tweaks for Test Pages
+   ============================================ */
+
+/* Very small screens (phones under 480px) */
+@media screen and (max-width: 480px) {
+  form li {
+    padding: 1.2rem 1rem;
+    margin: 1rem 0.5rem;
+  }
+
+  .options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .options label {
+    font-size: 0.9rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+  }
+}
+
+/* Tablets (768px–1023px) - moderate spacing */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  form li {
+    max-width: 900px;
+    margin: 1.5rem auto;
+    padding: 2rem;
+  }
+
+  .options {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.2rem;
+  }
+}
+
+/* Large desktops (1440px+) - prevent overly wide layout */
+@media screen and (min-width: 1440px) {
+  form li {
+    max-width: 1000px;
+    margin: 1.5rem auto;
+  }
+}
+
+/* ====== Center question blocks for both tests ====== */
+
+/* General form container styles */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center child items (each question li) horizontally */
+  justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ====== Test Question Card: Wider Layout, No Scrollbar ====== */
+form li {
+  background-color: #f5f5f5;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  margin: 2rem auto;
+  width: 96%;               /* Slightly wider */
+  max-width: 1200px;        /* Further increase desktop max width */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+form li:hover {
+  background-color: #fafafa;
+  transform: scale(1.005);
+}
+
+/* ====== Options Row ====== */
+form .options {
+  display: flex;
+  justify-content: space-evenly;  /* Automatically distribute equal spacing */
+  align-items: center;
+  flex-wrap: nowrap;              /* Keep single line on desktop */
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+  white-space: normal;            /* Allow text wrapping */
+  overflow-x: visible;            /* No longer use scrollbar */
+}
+
+form .options label {
+  font-size: 1rem;
+  color: #222;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;                        /* Automatically divide inline space equally */
+  justify-content: center;
+  min-width: 140px;               /* Minimum width for each option */
+}
+
+form .options label:hover {
+  color: #004080;
+  transform: scale(1.05);
+}
+
+/* ====== Responsive Adjustments ====== */
+@media screen and (max-width: 900px) {
+  form li {
+    width: 95%;
+    padding: 1.8rem 1.2rem;
+  }
+
+  form .options {
+    flex-wrap: wrap;              /* Allow wrapping on small screens */
+    gap: 1rem;
+  }
+
+  form .options label {
+    flex: none;
+    width: 45%;                   /* Two items per row on mobile */
+    min-width: 120px;
+    justify-content: flex-start;
+  }
+}

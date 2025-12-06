@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="A simplified Jungian cognitive type test site offering Standard and Professional versions.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="view-transition" content="same-origin">
+  <title>Jungian Cognitive Type Test</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="hello-world.js" defer></script>
+
+  <style>
+    /* --- Base Layout and Theme --- */
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      line-height: 1.6;
+      background-color: #ffffff; /* White background */
+      color: #222;
+    }
+
+    /* Header and nav styles are now in style.css for consistency across all pages */
+
+    /* --- Main Content --- */
+    main {
+      max-width: 1400px; /* Increased from 1200px for wider desktop layout */
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    section {
+      margin-bottom: 2.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    section h2 {
+      color: #004080;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    picture img {
+      max-width: 100%;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* --- Available Tests 横向卡片 --- */
+    .card-container {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 2.5rem; /* Increased gap for better spacing */
+      margin: 0 auto; /* No top margin - p's margin-bottom handles spacing (1.5rem) */
+      width: 100%;
+      max-width: 100%; /* Match body content width */
+    }
+
+    .card-container article {
+      flex: 1 1 calc(50% - 1.25rem); /* Each card takes ~50% minus half gap */
+      min-width: 280px; /* Minimum width for responsiveness */
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 0.6rem;
+      padding: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      text-align: left;
+    }
+
+    .card-container article h3 {
+      color: #004080;
+      margin-top: 0;
+      margin-bottom: 0.8rem;
+      font-size: 1.2rem;
+    }
+
+    .card-container article p {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0 0 1rem 0; /* Left align: no auto margins */
+      max-width: 100%; /* Full width */
+    }
+
+    .card-container button {
+      background-color: #004080;
+      color: white;
+      border: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 0.3rem;
+      cursor: pointer;
+      margin-top: 0.3rem;
+      font-size: 0.85rem;
+      transition: background-color 0.2s ease-in-out;
+      width: 100%;
+    }
+
+    .card-container button:hover {
+      background-color: #002d5c; /* Darker deep blue for hover */
+    }
+
+    /* --- Footer --- */
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #555;
+      padding: 1.2rem 0;
+      border-top: 1px solid #ddd;
+      background-color: #f7f7f7;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+
+      .card-container {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        max-width: 100%;
+        gap: 0.75rem;
+        padding: 0;
+        margin: 0;
+      }
+
+      .card-container article {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0.75rem 0.5rem !important;
+        margin: 0 !important;
+        box-sizing: border-box;
+      }
+      
+      .card-container article h3 {
+        font-size: 0.85rem !important;
+        margin: 0 0 0.3rem 0 !important;
+      }
+      
+      .card-container article p {
+        font-size: 0.75rem !important;
+        margin: 0 0 0.4rem 0 !important;
+        line-height: 1.25;
+      }
+      
+      .card-container button {
+        font-size: 0.75rem !important;
+        padding: 0.4rem 0.6rem !important;
+        width: 100% !important;
+        margin: 0.4rem 0 0 0 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Theme Toggle Button -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+    🌙
+  </button>
+  <noscript>
+    <style>
+      .theme-toggle { display: none !important; }
+    </style>
+    <p style="position: fixed; top: 1rem; right: 1rem; background: #ffeb3b; padding: 0.5rem; border-radius: 0.25rem; z-index: 1001;">
+      JavaScript is disabled. Theme toggle requires JavaScript.
+    </p>
+  </noscript>
+
+  <!-- Header: Site title and navigation -->
+  <header>
+    <h1>Jungian Cognitive Type Test</h1>
+    <nav>
+      <div id="theme-picker">
+        <label>Choose Theme:</label>
+        <select id="theme-select">
+          <option value="light">🌕 Light</option>
+          <option value="dark">🌑 Dark</option>
+          <option value="sunset">🌅 Sunset</option>
+          <option value="forest">🌲 Forest</option>
+        </select>
+      </div>
+      
+      
+      <input type="checkbox" id="nav-toggle" aria-label="Toggle navigation menu">
+      <label for="nav-toggle" class="hamburger-icon" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+      <ul>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="standard-test.html">Standard Test</a></li>
+        <li><a href="professional-test.html">Professional Test</a></li>
+        <li><a href="types.html">Type Descriptions</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="form-no-js.html">Form (No JS)</a></li>
+        <li><a href="form-with-js.html">Form (With JS)</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Welcome Section -->
+    <section id="welcome">
+      <h2>Welcome to the Jungian Cognitive Type Test</h2>
+      <p>
+        This website is inspired by Carl Jung’s theory of psychological types, 
+        which describes how people perceive the world and make decisions through 
+        eight fundamental cognitive functions 
+        <em>Thinking, Feeling, Sensing,</em> and <em>Intuition</em> — 
+        each expressed in either an <em>introverted</em> or <em>extraverted</em> form.
+      </p>
+      <figure>
+        <picture>
+          <source srcset="images/carl-jung-personality-theory.jpg" type="image/jpeg" media="(min-width: 800px)">
+          <source srcset="images/carl-jung-personality-theory.jpg" type="image/jpeg" media="(min-width: 400px)">
+          <img src="images/carl-jung-personality-theory.jpg" 
+               srcset="images/carl-jung-personality-theory.jpg 1x, images/carl-jung-personality-theory.jpg 2x"
+               alt="Carl Jung's Personality Theory Diagram showing Thinking, Feeling, Intuition, and Sensation.">
+        </picture>
+        <figcaption>Carl Jung's model of the four cognitive functions. <small>Image source: Public domain / Educational use</small></figcaption>
+      </figure>
+    </section>
+
+
+    <!-- Section 1: Introduction -->
+    <section id="about">
+      <h2>About Carl Jung's Cognitive Function Theory</h2>
+      <p>
+        This website provides a simplified exploration of Carl Jung’s cognitive function theory. Carl Jung proposed that everyone uses eight mental processes — combinations of <em>Thinking</em>, <em>Feeling</em>, <em>Sensing</em>, and <em>Intuition</em> — each expressed in either an <em>introverted</em> or <em>extraverted</em> form. These functions describe how we perceive information and make decisions. Discovering your dominant patterns can deepen your self-understanding and highlight your natural strengths.
+      </p>
+      <figure>
+        <picture>
+          <source srcset="images/bitmap-min6.png" type="image/png" media="(min-width: 800px)">
+          <source srcset="images/bitmap-min6.png" type="image/png" media="(min-width: 400px)">
+          <img src="images/bitmap-min6.png" 
+               srcset="images/bitmap-min6.png 1x, images/bitmap-min6.png 2x"
+               alt="Roles of the 8 Cognitive Functions diagram: Fi, Fe, Ti, Te, Ni, Ne, Si, Se.">
+        </picture>
+        <figcaption>The eight cognitive functions and their primary roles. <small>Image source: Educational diagram / Public domain</small></figcaption>
+      </figure>
+    </section>
+
+    <!-- Section 2: Available Tests -->
+    <section>
+      <h2>Available Tests</h2>
+      <p>Choose the version that best fits your goals. The Standard Test is ideal for quick self-reflection, while the Professional version provides a deeper cognitive analysis.</p>
+      <div class="card-container">
+        <article>
+          <h3>Standard Version</h3>
+          <p>The Standard Test provides a quick, accessible experience for self-awareness.</p>
+          <button onclick="location.href='standard-test.html'">Start Standard Test</button>
+        </article>
+
+        <article>
+          <h3>Professional Version</h3>
+          <p>The Professional Test offers detailed cognitive function profiles for users.</p>
+          <button onclick="location.href='professional-test.html'">Start Professional Test</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- Section 3: Type Descriptions -->
+    <section>
+      <h2>Type Descriptions</h2>
+      <p>Explore detailed profiles of the 16 Jungian personality types
+        and their underlying <em>cognitive functions</em>.  
+        Each description highlights characteristic ways of thinking, feeling, 
+        and interacting with the world — helping you better understand both yourself and others.</p>
+      <button onclick="location.href='types.html'">View Type Descriptions</button>
+    </section>
+
+    <!-- Section 4: Contact -->
+    <section>
+      <h2>Contact</h2>
+      <p>Have questions about your test results or ideas about Jung's theory? We'd love to hear from you. Share your feedback, insights, or collaborations through our contact form below. </p>
+      <button onclick="location.href='contact.html'">Get in Touch</button>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p><em>© 2025 Jungian Cognitive Test Project</em></p>
+  </footer>
+
+  <script src="theme-toggle.js" defer></script>
+  <script src="view-transitions.js" defer></script>
+  <script>
+    // Placeholder for future analytics or features
+  </script>
+  <script src="theme-picker.js" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact form without JavaScript validation.">
+  <meta name="view-transition" content="same-origin">
+  <title>Contact Form (No JS) | Jungian Cognitive Type Test</title>
+
+  <!-- Your site-wide CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ------- Layout container ------- */
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ------- Card Container ------- */
+    .form-card {
+      background: var(--neutral-bg, #f6f6f6);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* ------- Form Layout (Flex) ------- */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* ------- Field group ------- */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    .required {
+      color: #d32f2f;
+      margin-left: 4px;
+    }
+
+    /* ------- Input + Textarea ------- */
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 1rem;
+      font-family: 'BodyFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                   'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      transition: border-color 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #004080;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0,64,128,0.15);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* ------- HTML5 Validation Styling ------- */
+    input:required,
+    textarea:required {
+      border-left: 4px solid #004080;
+    }
+
+    /* 显示无效状态 - 使用 :user-invalid（现代浏览器，只在用户交互后显示） */
+    /* 这包括空必填字段，当用户尝试提交或与字段交互后会显示红色 */
+    input:user-invalid,
+    textarea:user-invalid {
+      background: #ffebee;
+      border-color: #d32f2f;
+    }
+
+    /* 对于不支持 :user-invalid 的浏览器，使用以下回退规则 */
+    /* 当用户聚焦字段、输入内容后，或字段被触摸后显示验证状态 */
+    input:invalid:not(:placeholder-shown),
+    textarea:invalid:not(:placeholder-shown),
+    input:invalid:focus,
+    textarea:invalid:focus,
+    input:invalid:required:focus,
+    textarea:invalid:required:focus {
+      background: #ffebee;
+      border-color: #d32f2f;
+    }
+
+    /* 确保空必填字段在用户尝试提交时显示红色 */
+    /* 当用户点击字段或尝试提交时，浏览器会聚焦字段，触发 :focus 状态 */
+    input:required:invalid:focus,
+    textarea:required:invalid:focus,
+    input:required:invalid:user-invalid,
+    textarea:required:invalid:user-invalid {
+      background: #ffebee;
+      border-color: #d32f2f;
+    }
+
+    /* 显示有效状态 */
+    input:valid:not(:placeholder-shown),
+    textarea:valid:not(:placeholder-shown) {
+      background: #e8f5e9;
+      border-color: #388e3c;
+    }
+
+    /* ------- Output Messages ------- */
+    output {
+      display: block;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    output#error-message {
+      background: #ffebee;
+      border: 1px solid #c62828;
+      color: #b71c1c;
+    }
+
+    output#info-message {
+      background: #e3f2fd;
+      border: 1px solid #64b5f6;
+      color: #0d47a1;
+    }
+
+    /* Hide empty output */
+    output:empty {
+      display: none;
+    }
+
+    /* ------- Submit button ------- */
+    button[type="submit"] {
+      width: fit-content;
+      padding: 0.75rem 1.5rem;
+      background: #004080;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background: #003060;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Theme Toggle (required for whole site) -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+  <noscript><style>.theme-toggle{display:none !important;}</style></noscript>
+
+  <!-- Navigation consistent with your site -->
+  <header>
+    <h1>Jungian Cognitive Type Test</h1>
+
+    <nav>
+      <div id="theme-picker">
+        <label>Choose Theme:</label>
+        <select id="theme-select">
+          <option value="light">🌕 Light</option>
+          <option value="dark">🌑 Dark</option>
+          <option value="sunset">🌅 Sunset</option>
+          <option value="forest">🌲 Forest</option>
+        </select>
+      </div>
+      
+      
+      <input type="checkbox" id="nav-toggle">
+      <label for="nav-toggle" class="hamburger-icon">
+        <span></span><span></span><span></span>
+      </label>
+
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="standard-test.html">Standard Test</a></li>
+        <li><a href="professional-test.html">Professional Test</a></li>
+        <li><a href="types.html">Type Descriptions</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a class="active" href="form-no-js.html">Form (No JS)</a></li>
+        <li><a href="form-with-js.html">Form (With JS)</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Form Section -->
+  <main>
+    <h2>Contact Form (HTML + CSS Only)</h2>
+
+    <div class="form-card">
+
+      <form action="https://httpbin.org/post" method="post">
+        <input type="hidden" name="possible_bot" value="true">
+      
+        <div class="form-group">
+          <label for="name">
+            Name <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            required
+            minlength="2"
+            maxlength="100"
+            pattern="[A-Za-z\s\-']+"
+            placeholder="Your full name">
+        </div>
+      
+        <div class="form-group">
+          <label for="email">
+            Email <span class="required">*</span>
+          </label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            required
+            minlength="5"
+            maxlength="254"
+            placeholder="you@example.com">
+        </div>
+      
+        <div class="form-group">
+          <label for="comments">
+            Comments <span class="required">*</span>
+          </label>
+          <textarea 
+            id="comments" 
+            name="comments" 
+            required
+            minlength="10"
+            maxlength="1000"
+            placeholder="At least 10 characters"></textarea>
+        </div>
+      
+        <output id="error-message" for="name email comments" role="alert"></output>
+        <output id="info-message" for="name email comments"></output>
+      
+        <button type="submit" class="btn-primary">Submit</button>
+      </form>      
+    </div>
+  </main>
+
+  <footer>
+    <p><em>© 2025 Jungian Cognitive Type Test Project</em></p>
+  </footer>
+
+  <script src="theme-toggle.js" defer></script>
+  <script src="view-transitions.js" defer></script>
+  <script src="theme-picker.js" defer></script>
+
+
+</body>
+</html>

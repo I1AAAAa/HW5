@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact form with JavaScript validation.">
+  <meta name="view-transition" content="same-origin">
+  <title>Contact Form (With JS) | Jungian Cognitive Type Test</title>
+
+  <!-- Your site-wide CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ------- Layout container ------- */
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ------- Card Container ------- */
+    .form-card {
+      background: var(--neutral-bg, #f6f6f6);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* ------- Form Layout (Flex) ------- */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* ------- Field group ------- */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    .required {
+      color: #d32f2f;
+      margin-left: 4px;
+    }
+
+    /* ------- Input + Textarea ------- */
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 1rem;
+      font-family: 'BodyFont', -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                   'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #004080;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0,64,128,0.15);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* ------- HTML5 Validation Styling ------- */
+    input:required,
+    textarea:required {
+      border-left: 4px solid #004080;
+    }
+
+    input:invalid:not(:placeholder-shown),
+    textarea:invalid:not(:placeholder-shown) {
+      background: #ffebee;
+      border-color: #d32f2f;
+    }
+
+    input:valid:not(:placeholder-shown),
+    textarea:valid:not(:placeholder-shown) {
+      background: #e8f5e9;
+      border-color: #388e3c;
+    }
+
+    /* ------- Field flash animation for illegal characters ------- */
+    @keyframes flash {
+      0%, 100% { background-color: #fff; }
+      50% { background-color: #ffcdd2; }
+    }
+
+    .field-flash {
+      animation: flash 0.5s ease-in-out;
+    }
+
+    /* ------- Character counter ------- */
+    .char-counter {
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+      text-align: right;
+      color: #666;
+    }
+
+    .char-counter.warning {
+      color: #f57c00;
+      font-weight: 600;
+    }
+
+    .char-counter.error {
+      color: #d32f2f;
+      font-weight: 700;
+    }
+
+    /* ------- Output Messages ------- */
+    output {
+      display: block;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    output#error-message {
+      background: #ffebee;
+      border: 1px solid #c62828;
+      color: #b71c1c;
+    }
+
+    output#info-message {
+      background: #e3f2fd;
+      border: 1px solid #64b5f6;
+      color: #0d47a1;
+    }
+
+    /* Hide empty output */
+    output:empty {
+      display: none;
+    }
+
+    /* ------- Submit button ------- */
+    button[type="submit"] {
+      width: fit-content;
+      padding: 0.75rem 1.5rem;
+      background: #004080;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background: #003060;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Theme Toggle (required for whole site) -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+  <noscript><style>.theme-toggle{display:none !important;}</style></noscript>
+
+  <!-- Navigation consistent with your site -->
+  <header>
+    <h1>Jungian Cognitive Type Test</h1>
+
+    <nav>
+      <div id="theme-picker">
+        <label>Choose Theme:</label>
+        <select id="theme-select">
+          <option value="light">🌕 Light</option>
+          <option value="dark">🌑 Dark</option>
+          <option value="sunset">🌅 Sunset</option>
+          <option value="forest">🌲 Forest</option>
+        </select>
+      </div>
+      
+      
+      <input type="checkbox" id="nav-toggle">
+      <label for="nav-toggle" class="hamburger-icon">
+        <span></span><span></span><span></span>
+      </label>
+
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="standard-test.html">Standard Test</a></li>
+        <li><a href="professional-test.html">Professional Test</a></li>
+        <li><a href="types.html">Type Descriptions</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="form-no-js.html">Form (No JS)</a></li>
+        <li><a class="active" href="form-with-js.html">Form (With JS)</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Form Section -->
+  <main>
+    <h2>Contact Form (With JavaScript Validation)</h2>
+
+    <div class="form-card">
+
+        <form id="contact-form" action="https://httpbin.org/post" method="post" novalidate>
+        <input type="hidden" name="possible_bot" value="true">
+      
+        <div class="form-group">
+          <label for="name">
+            Name <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            required
+            minlength="2"
+            maxlength="100"
+            pattern="^[A-Za-z\s\-']+$"
+            placeholder="Your full name">
+        </div>
+      
+        <div class="form-group">
+          <label for="email">
+            Email <span class="required">*</span>
+          </label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            required
+            minlength="5"
+            maxlength="254"
+            placeholder="you@example.com">
+        </div>
+      
+        <div class="form-group">
+          <label for="comments">
+            Comments <span class="required">*</span>
+          </label>
+          <textarea 
+            id="comments" 
+            name="comments" 
+            required
+            minlength="10"
+            maxlength="1000"
+            placeholder="At least 10 characters"></textarea>
+          <div id="char-counter" class="char-counter">1000 characters remaining</div>
+        </div>
+      
+        <output id="error-message" for="name email comments" role="alert"></output>
+        <output id="info-message" for="name email comments"></output>
+      
+        <button type="submit" class="btn-primary">Submit</button>
+      </form>      
+    </div>
+  </main>
+
+  <footer>
+    <p><em>© 2025 Jungian Cognitive Type Test Project</em></p>
+  </footer>
+
+  <script src="theme-toggle.js" defer></script>
+  <script src="view-transitions.js" defer></script>
+
+  <script>
+    // ========= 全局状态 =========
+    let form_errors = [];          // 当前这一次提交的错误
+    let errorHistory = [];         // 所有历史错误（跨多次提交）
+
+    // 从 sessionStorage 里恢复历史错误
+    try {
+      const saved = sessionStorage.getItem('form_errors_history');
+      if (saved) {
+        errorHistory = JSON.parse(saved);
+      }
+    } catch (e) {
+      errorHistory = [];
+    }
+
+    // ========= 拿到 DOM 元素 =========
+    const form             = document.getElementById('contact-form');
+    const nameInput        = document.getElementById('name');
+    const emailInput       = document.getElementById('email');
+    const commentsTextarea = document.getElementById('comments');
+    const errorMessage     = document.getElementById('error-message');
+    const infoMessage      = document.getElementById('info-message');
+    const charCounter      = document.getElementById('char-counter');
+
+    // 字段配置
+    const fieldConfig = {
+      name: {
+        element: nameInput,
+        pattern: /^[A-Za-z\s\-']+$/,   // 整体验证用
+        charPattern: /[A-Za-z\s\-']/,  // 单字符屏蔽用
+        patternMessage: 'Name can only contain letters, spaces, hyphens, and apostrophes.',
+        minLength: 2,
+        maxLength: 100,
+        required: true
+      },
+      email: {
+        element: emailInput,
+        minLength: 5,
+        maxLength: 254,
+        required: true
+      },
+      comments: {
+        element: commentsTextarea,
+        minLength: 10,
+        maxLength: 1000,
+        required: true,
+        warningThreshold: 100
+      }
+    };
+
+    // ========= 通用小工具 =========
+    let tempErrorTimeout = null;
+
+    function clearMessages() {
+      errorMessage.textContent = '';
+      errorMessage.style.display = '';
+      infoMessage.textContent = '';
+      infoMessage.style.display = '';
+    }
+
+    function showErrorMessage(message) {
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block';
+      infoMessage.textContent = '';
+      infoMessage.style.display = '';
+    }
+
+    function showInfoMessage(message) {
+      errorMessage.textContent = '';
+      errorMessage.style.display = '';
+      infoMessage.textContent = message;
+      infoMessage.style.display = 'block';
+    }
+
+    // 短暂错误（非法字符）3 秒自动消失
+    function showTemporaryError(message) {
+      if (tempErrorTimeout) clearTimeout(tempErrorTimeout);
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block';
+      tempErrorTimeout = setTimeout(() => {
+        errorMessage.textContent = '';
+        errorMessage.style.display = '';
+      }, 3000);
+    }
+
+    function flashField(field) {
+      field.classList.add('field-flash');
+      setTimeout(() => field.classList.remove('field-flash'), 500);
+    }
+
+    // ========= HTML5 + Constraint Validation 验证 =========
+    function validateField(fieldName) {
+      const config = fieldConfig[fieldName];
+      const field  = config.element;
+
+      field.setCustomValidity('');
+
+      if (!field.checkValidity()) {
+        let msg = field.validationMessage;
+
+        if (field.validity.valueMissing) {
+          msg = `${capitalize(fieldName)} is required.`;
+        } else if (field.validity.tooShort) {
+          msg = `${capitalize(fieldName)} must be at least ${config.minLength} characters.`;
+        } else if (field.validity.tooLong) {
+          msg = `${capitalize(fieldName)} must be no more than ${config.maxLength} characters.`;
+        } else if (field.validity.patternMismatch && config.patternMessage) {
+          msg = config.patternMessage;
+        } else if (field.validity.typeMismatch) {
+          msg = 'Please enter a valid email address.';
+        }
+
+        field.setCustomValidity(msg);
+        return false;
+      }
+      return true;
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // ========= 非法字符屏蔽（姓名） =========
+    function handleInputMasking(fieldName) {
+      const config = fieldConfig[fieldName];
+      const field  = config.element;
+
+      if (!config.charPattern) return;
+
+      // 用户输入
+      field.addEventListener('input', (e) => {
+        const value   = e.target.value;
+        const lastChar = value[value.length - 1];
+
+        if (lastChar && !config.charPattern.test(lastChar)) {
+          e.target.value = value.slice(0, -1);
+          flashField(e.target);
+          showTemporaryError(`Illegal character "${lastChar}" entered. ${config.patternMessage}`);
+        }
+      });
+
+      // 粘贴
+      field.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasted    = (e.clipboardData || window.clipboardData).getData('text');
+        const current   = e.target.value;
+        const cursorPos = e.target.selectionStart;
+
+        const filtered = pasted.split('').filter(ch => config.charPattern.test(ch)).join('');
+        const newValue = current.slice(0, cursorPos) + filtered + current.slice(e.target.selectionEnd);
+
+        if (filtered.length < pasted.length) {
+          flashField(e.target);
+          showTemporaryError(`Some illegal characters were removed from pasted text. ${config.patternMessage}`);
+        }
+
+        e.target.value = newValue;
+        e.target.setSelectionRange(cursorPos + filtered.length, cursorPos + filtered.length);
+        e.target.dispatchEvent(new Event('input'));
+      });
+    }
+
+    // ========= 文本域字数统计 =========
+    function updateCharCounter() {
+      const len        = commentsTextarea.value.length;
+      const remaining  = fieldConfig.comments.maxLength - len;
+      const threshold  = fieldConfig.comments.warningThreshold;
+
+      charCounter.textContent =
+        `${remaining} character${remaining !== 1 ? 's' : ''} remaining`;
+
+      charCounter.classList.remove('warning', 'error');
+
+      if (remaining < 0) {
+        charCounter.classList.add('error');
+        charCounter.textContent =
+          `${Math.abs(remaining)} character${Math.abs(remaining) !== 1 ? 's' : ''} over limit`;
+        commentsTextarea.setCustomValidity(
+          `Comments cannot exceed ${fieldConfig.comments.maxLength} characters.`
+        );
+      } else if (remaining <= threshold) {
+        charCounter.classList.add('warning');
+        commentsTextarea.setCustomValidity('');
+      } else {
+        commentsTextarea.setCustomValidity('');
+      }
+    }
+
+    // ========= 收集当前这次提交的错误 =========
+    function collectFormErrors() {
+      const errors = [];
+
+      for (const fieldName in fieldConfig) {
+        const cfg   = fieldConfig[fieldName];
+        const field = cfg.element;
+
+        if (!field.checkValidity()) {
+          errors.push({
+            field: fieldName,
+            value: field.value.length > 50 ? field.value.slice(0, 50) + '...' : field.value,
+            errorType: getErrorType(field),
+            message: field.validationMessage || field.getAttribute('title') || 'Invalid input',
+            timestamp: new Date().toISOString()
+          });
+        }
+      }
+
+      // 再单独检查 textarea 超长
+      if (commentsTextarea.value.length > fieldConfig.comments.maxLength) {
+        errors.push({
+          field: 'comments',
+          value: commentsTextarea.value.length > 50
+            ? commentsTextarea.value.slice(0, 50) + '...' : commentsTextarea.value,
+          errorType: 'characterLimitExceeded',
+          message: `Comments exceeded maximum length of ${fieldConfig.comments.maxLength} characters`,
+          timestamp: new Date().toISOString()
+        });
+      }
+
+      return errors;
+    }
+
+    function getErrorType(field) {
+      if (field.validity.valueMissing)   return 'valueMissing';
+      if (field.validity.tooShort)       return 'tooShort';
+      if (field.validity.tooLong)        return 'tooLong';
+      if (field.validity.patternMismatch)return 'patternMismatch';
+      if (field.validity.typeMismatch)   return 'typeMismatch';
+      return 'custom';
+    }
+
+    // 给 / 更新隐藏字段
+    function setFormErrorsHiddenField(value) {
+      let hidden = form.querySelector('input[name="form-errors"]');
+      if (!hidden) {
+        hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = 'form-errors';
+        form.appendChild(hidden);
+      }
+      hidden.value = value;
+    }
+
+    // ========= 事件绑定 =========
+    // 1. 姓名屏蔽非法字符
+    handleInputMasking('name');
+
+    // 2. 字数统计
+    commentsTextarea.addEventListener('input', updateCharCounter);
+    commentsTextarea.addEventListener('paste', () => setTimeout(updateCharCounter, 0));
+    updateCharCounter();
+
+    // 3. blur 的时候给 info message（g 小问用）
+    nameInput.addEventListener('blur', () => {
+      if (validateField('name')) {
+        showInfoMessage('Name looks good!');
+        setTimeout(clearMessages, 3000);
+      }
+    });
+
+    emailInput.addEventListener('blur', () => {
+      if (validateField('email')) {
+        showInfoMessage('Email looks good!');
+        setTimeout(clearMessages, 3000);
+      }
+    });
+
+    commentsTextarea.addEventListener('blur', () => {
+      if (validateField('comments') &&
+          commentsTextarea.value.length <= fieldConfig.comments.maxLength) {
+        showInfoMessage('Comments look good!');
+        setTimeout(clearMessages, 3000);
+      }
+    });
+
+    // ========= 提交逻辑（最关键） =========
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();     // 先拦截，自己决定要不要发
+      clearMessages();
+
+      let isValid = true;
+
+      for (const fieldName in fieldConfig) {
+        if (!validateField(fieldName)) {
+          isValid = false;
+        }
+      }
+
+      if (commentsTextarea.value.length > fieldConfig.comments.maxLength) {
+        isValid = false;
+        commentsTextarea.setCustomValidity(
+          `Comments cannot exceed ${fieldConfig.comments.maxLength} characters.`
+        );
+      }
+
+      if (!isValid) {
+        // ❌ 有错误：收集本次错误，加入 history，并阻止提交
+        form_errors = collectFormErrors();
+
+        const attemptTime = new Date().toISOString();
+        form_errors.forEach(err => err.submissionAttempt = attemptTime);
+
+        // 累积到历史错误里
+        errorHistory.push(...form_errors);
+
+        // 存到 sessionStorage，给下一次正确提交用
+        try {
+          sessionStorage.setItem('form_errors_history', JSON.stringify(errorHistory));
+        } catch (e) {}
+
+        const summary = form_errors.map(err => `${err.field}: ${err.message}`).join('; ');
+        showErrorMessage(`Please fix the following errors: ${summary}`);
+
+        // 当前这次提交的错误也放进隐藏字段（虽然这次不会真正发出去）
+        setFormErrorsHiddenField(JSON.stringify(form_errors));
+        return;
+      }
+
+      // ✅ 全部通过：读取历史错误，放进 form-errors 一起提交
+      try {
+        const saved = sessionStorage.getItem('form_errors_history');
+        if (saved) {
+          errorHistory = JSON.parse(saved);
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      setFormErrorsHiddenField(JSON.stringify(errorHistory));
+
+      // 提交前可以把历史清掉，避免之后还带着旧数据
+      try {
+        sessionStorage.removeItem('form_errors_history');
+      } catch (e) {}
+
+      // 真正提交表单到 httpbin（不会再次触发 submit 事件）
+      form.submit();
+    });
+  </script>
+  <script src="theme-picker.js" defer></script>
+
+
+</body>
+</html>
