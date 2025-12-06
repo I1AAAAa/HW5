@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Manage project cards - Create, Update, and Delete operations.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="view-transition" content="same-origin">
+  <title>Manage Projects | CRUD Operations</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .crud-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-lg, 2rem);
+    }
+
+    .crud-section {
+      margin-bottom: var(--spacing-lg, 2rem);
+      padding: var(--spacing-md, 1.5rem);
+      background-color: var(--color-bg, #ffffff);
+      border-radius: var(--border-radius, 0.5rem);
+      box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    .crud-section h2 {
+      color: var(--color-primary, #004080);
+      margin-bottom: var(--spacing-md, 1.5rem);
+      border-bottom: 2px solid var(--color-border, #e5e7eb);
+      padding-bottom: var(--spacing-xs, 0.5rem);
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-sm, 1rem);
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: var(--spacing-xs, 0.5rem);
+      font-weight: 500;
+      color: var(--color-text, #1f2937);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      max-width: 600px;
+      padding: var(--spacing-sm, 1rem);
+      border: 1px solid var(--color-border, #e5e7eb);
+      border-radius: var(--border-radius, 0.5rem);
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* 修复按钮容器布局 */
+    .form-actions {
+      display: flex;
+      flex-direction: row;
+      align-items: center; /* 确保垂直居中对齐 */
+      justify-content: flex-start;
+      gap: var(--spacing-sm, 1rem);
+      flex-wrap: wrap;
+    }
+
+    /* 统一按钮基础样式 - 强制重置所有浏览器默认样式和全局样式 */
+    .form-actions .btn,
+    .form-actions button.btn,
+    .form-actions .btn[type="submit"],
+    .form-actions .btn[type="reset"],
+    .form-actions .btn[type="button"] {
+      /* 强制统一高度 */
+      height: 3rem !important; /* 48px */
+      min-height: 3rem !important;
+      max-height: 3rem !important;
+      
+      /* 统一宽度 */
+      width: 200px !important;
+      
+      /* 布局与对齐 */
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      vertical-align: middle;
+      
+      /* 边框与盒模型 */
+      box-sizing: border-box !important;
+      border: 2px solid transparent !important; /* 预留边框位置，防止高度抖动 */
+      border-radius: var(--border-radius, 0.5rem) !important;
+      padding: 0 1.5rem !important;
+      margin: 0 !important; /* 去除浏览器默认边距 */
+      
+      /* 文字样式 */
+      font-size: 1rem !important;
+      font-weight: 600 !important;
+      line-height: 1 !important; /* 防止文字行高撑开布局 */
+      white-space: nowrap !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      
+      /* 重置浏览器默认样式 */
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      appearance: none !important;
+      text-decoration: none !important;
+      outline: none !important;
+    }
+
+    /* 主按钮样式 (Create/Update) */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--color-primary, #004080) 0%, var(--color-primary-dark, #002d5c) 100%);
+      color: white;
+      border-color: var(--color-primary-dark, #002d5c); /* 显式设置边框颜色 */
+      box-shadow: 0 4px 6px rgba(0, 64, 128, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 64, 128, 0.4);
+    }
+
+    /* 次要按钮样式 (Clear/Cancel) */
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--color-bg-accent, #e5e7eb) 0%, var(--color-border, #d1d5db) 100%);
+      color: var(--color-text, #1f2937);
+      border-color: var(--color-border, #d1d5db); /* 显式设置边框颜色 */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* 危险按钮样式 (Delete) */
+    .btn-danger {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      color: white;
+      border-color: #b91c1c;
+      box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);
+    }
+    
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(220, 38, 38, 0.4);
+    }
+
+    .projects-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-md, 1.5rem);
+      margin-top: var(--spacing-md, 1.5rem);
+    }
+
+    @media screen and (max-width: 1200px) {
+      .projects-list {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media screen and (max-width: 900px) {
+      .projects-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .projects-list {
+        grid-template-columns: 1fr;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 100%;
+        height: 3rem; /* 保持固定高度 */
+        min-height: 3rem;
+        max-height: 3rem;
+      }
+    }
+
+    .project-item {
+      padding: var(--spacing-md, 1.5rem);
+      border: 1px solid var(--color-border, #e5e7eb);
+      border-radius: var(--border-radius, 0.5rem);
+      background-color: var(--color-bg-secondary, #f9fafb);
+    }
+
+    .project-item h3 {
+      margin-top: 0;
+      color: var(--color-primary, #004080);
+    }
+
+    .project-item-actions {
+      display: flex;
+      gap: var(--spacing-xs, 0.5rem);
+      margin-top: var(--spacing-sm, 1rem);
+    }
+
+    .message {
+      padding: var(--spacing-sm, 1rem);
+      border-radius: var(--border-radius, 0.5rem);
+      margin-bottom: var(--spacing-md, 1.5rem);
+    }
+
+    .message-success {
+      background-color: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+    }
+
+    .message-error {
+      background-color: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle Button -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+    🌙
+  </button>
+  <noscript>
+    <style>
+      .theme-toggle { display: none !important; }
+    </style>
+  </noscript>
+
+  <header>
+    <h1>Jungian Cognitive Type Test</h1>
+    <nav>
+      <div id="theme-picker">
+        <label>Choose Theme:</label>
+        <select id="theme-select">
+          <option value="light">🌕 Light</option>
+          <option value="dark">🌑 Dark</option>
+          <option value="sunset">🌅 Sunset</option>
+          <option value="forest">🌲 Forest</option>
+        </select>
+      </div>
+      
+      <input type="checkbox" id="nav-toggle" aria-label="Toggle navigation menu">
+      <label for="nav-toggle" class="hamburger-icon" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="standard-test.html">Standard Test</a></li>
+        <li><a href="professional-test.html">Professional Test</a></li>
+        <li><a href="types.html">Type Descriptions</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="crud.html" class="active">Manage Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="crud-container">
+      <h1>Manage Project Cards</h1>
+      <p>Create, update, and delete project cards. Changes will be saved to localStorage and can be loaded on the Projects page.</p>
+
+      <!-- Message area -->
+      <div id="message-area"></div>
+
+      <!-- Create Section -->
+      <section class="crud-section">
+        <h2>Create New Project Card</h2>
+        <form id="create-form">
+          <div class="form-group">
+            <label for="create-title">Title *</label>
+            <input type="text" id="create-title" name="title" required placeholder="e.g., Introverted Intuition (Ni)">
+          </div>
+          <div class="form-group">
+            <label for="create-image">Image URL</label>
+            <input type="text" id="create-image" name="image" placeholder="e.g., images/bitmap-min6.png">
+          </div>
+          <div class="form-group">
+            <label for="create-alt">Alt Text</label>
+            <input type="text" id="create-alt" name="alt" placeholder="Description of the image">
+          </div>
+          <div class="form-group">
+            <label for="create-description">Description *</label>
+            <textarea id="create-description" name="description" required placeholder="Detailed description of the cognitive function or project..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="create-link">Link URL</label>
+            <input type="text" id="create-link" name="link" placeholder="e.g., types.html#ni">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Project Card</button>
+            <button type="reset" class="btn btn-secondary">Clear Form</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Update Section -->
+      <section class="crud-section">
+        <h2>Update Existing Project Card</h2>
+        <form id="update-form">
+          <div class="form-group">
+            <label for="update-id">Select Project to Update</label>
+            <select id="update-id" name="id" required>
+              <option value="">-- Select a project --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="update-title">Title *</label>
+            <input type="text" id="update-title" name="title" required>
+          </div>
+          <div class="form-group">
+            <label for="update-image">Image URL</label>
+            <input type="text" id="update-image" name="image">
+          </div>
+          <div class="form-group">
+            <label for="update-alt">Alt Text</label>
+            <input type="text" id="update-alt" name="alt">
+          </div>
+          <div class="form-group">
+            <label for="update-description">Description *</label>
+            <textarea id="update-description" name="description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="update-link">Link URL</label>
+            <input type="text" id="update-link" name="link">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Update Project Card</button>
+            <button type="button" class="btn btn-secondary" id="cancel-update-btn">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Delete Section -->
+      <section class="crud-section">
+        <h2>Delete Project Card</h2>
+        <div class="form-group">
+          <label for="delete-id">Select Project to Delete</label>
+          <select id="delete-id" name="id" required>
+            <option value="">-- Select a project --</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-danger" id="delete-btn">Delete Project Card</button>
+        </div>
+      </section>
+
+      <!-- List All Projects -->
+      <section class="crud-section">
+        <h2>All Project Cards</h2>
+        <div id="projects-list" class="projects-list">
+          <!-- Projects will be listed here -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p><em>© 2025 Jungian Cognitive Test Project</em></p>
+  </footer>
+
+  <script src="project-card.js" defer></script>
+  <script src="crud-operations.js" defer></script>
+  <script src="view-transitions.js" defer></script>
+  <script src="theme-toggle.js" defer></script>
+  <script src="theme-picker.js" defer></script>
+</body>
+</html>
+
